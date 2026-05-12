@@ -1,0 +1,54 @@
+1. Instalar Chef (si te lo pide)
+curl -L https://omnitruck.chef.io/install.sh | sudo bash
+
+Aprovisionas la máquina (tienes la IP (hostname -I)).
+Lanzas el comando:
+knife bootstrap [IP_del_servidor] -N nombre_nodo -r "role[base_config]"
+
+2. Comprobar Ohai (info del sistema)
+Ohai es la herramienta que usa Chef para detectar el sistema
+ohai
+
+3. Crear estructura de cookbooks
+mkdir -p cookbooks
+cd cookbooks
+
+4. Crear cookbooks
+chef generate cookbook apt
+chef generate cookbook openssh
+chef generate cookbook apache2
+chef generate cookbook mysql
+
+5. Ejecutar recetas (sin roles)
+sudo chef-client -z -o recipe[apt],recipe[openssh],recipe[apache2]
+
+6. Ejecutar ROLES
+
+sudo chef-client -z -o "role[web_server]"
+sudo chef-client -z -o "role[base_config]"
+sudo chef-client -z -o "role[db_server]"
+sudo chef-client -z -o "role[lamp_stack]"
+
+8. Comprobaciones
+Apache
+systemctl status apache2
+
+SSH
+systemctl status ssh
+
+MySQL
+systemctl status mysql
+
+9. DEMO (lo más importante)
+Romper SSH:
+sudo systemctl stop ssh
+sudo systemctl stop ssh.socket
+
+Ejecutar Chef:
+sudo chef-client -z -o "role[web_server]"
+
+systemctl status ssh
+
+10. Prueba web
+
+http://localhost
